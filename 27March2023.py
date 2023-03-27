@@ -53,9 +53,7 @@ def get_max_profit(prices: List[int], fee: int) -> int:
     buy_price, sell_price = -prices[0] - fee, 0
 
     for i, price in enumerate(prices[1:], start=1):
-        if (new_buy_price := sell_price - price - fee) > buy_price:
-            buy_price = new_buy_price
-        if (new_sell_price := buy_price + price) > sell_price:
-            sell_price = new_sell_price
+        if (buy_price, sell_price) := (max(buy_price, sell_price - price - fee), max(sell_price, buy_price + price)):
+            continue
 
     return sell_price
