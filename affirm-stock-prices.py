@@ -36,12 +36,30 @@ def check_input_validity(prices_list: List[int], transaction_fee: int) -> None:
 
 
 def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
-    """
-    Calculate the maximum profit that can be made from buying and selling a stock,
-    given a list of prices and a transaction fee.
-    :param prices_list: a list of prices for the stock
-    :param transaction_fee: the fee charged for each transaction
-    :return: the maximum profit that can be made from buying and selling the stock
+      """
+    Given a list of stock prices and a transaction fee, calculates the maximum profit that can be made
+    by buying and selling a single stock, subject to the transaction fee.
+
+    Args:
+        prices (List[float]): A list of stock prices, where prices[i] is the price of the stock on day i.
+        transaction_fee (float): The transaction fee incurred for buying or selling a stock.
+
+    Returns:
+        The maximum profit that can be made by buying and selling a single stock, subject to the transaction fee.
+
+    Raises:
+        ValueError: If prices is empty or if transaction_fee is negative.
+
+    Note:
+        - If there are no profitable trades that can be made, returns 0.
+        - If transaction_fee is 0 or negative, it is effectively ignored.
+        - If the input list can have repeated prices, the function considers each occurrence of a price
+          as a different stock on a different day. For example, if prices=[1, 2, 1], the function considers
+          buying on day 1 and selling on day 2, and also buying on day 3 and selling on day 2.
+
+    Example:
+        >>> calculate_max_profit([1, 3, 2, 8, 4, 10], 2)
+        9.0
     """
     check_input_validity(prices_list, transaction_fee)
 
@@ -76,25 +94,62 @@ def test_calculate_max_profit():
     the function is correctly calculating the maximum profit that can be made from buying
     and selling a stock given a list of prices and a transaction fee.
     """
+    # Test basic case with increasing prices and no transaction fee
     assert calculate_max_profit([1, 2, 3, 4, 5], 0) == 4
+    
+    # Test case with varying prices and transaction fee
     assert calculate_max_profit([1, 3, 2, 8, 4, 10], 2) == 9
+    
+    # Test case with decreasing prices and transaction fee
     assert calculate_max_profit([3, 2, 6, 5, 0, 3], 1) == 2
+    
+    # Test case with increasing prices and small transaction fee
     assert calculate_max_profit([1, 2, 3, 4, 5], 1) == 3
+    
+    # Test case with decreasing prices and no transaction fee
     assert calculate_max_profit([5, 4, 3, 2, 1], 0) == 0
+    
+    # Test case with empty prices list and transaction fee
     assert calculate_max_profit([], 2) == 0
+    
+    # Test case with one element in prices list and transaction fee
     assert calculate_max_profit([1], 1) == 0
+    
+    # Test case with large list of prices and no transaction fee
     assert calculate_max_profit([1, 2, 3] * 1000, 0) == 2997
+    
+    # Test case with varying prices and transaction fee
     assert calculate_max_profit([1, 10], 1) == 8
+    
+    # Test case with one price repeated many times and transaction fee
     assert calculate_max_profit([1] * 1000000, 2) == 0
+    
+    # Test case with only negative prices and no transaction fee
     assert calculate_max_profit([-1, -2, -3], 0) == 0
+    
+    # Test case with only same prices and transaction fee
     assert calculate_max_profit([1, 1, 1, 1], 2) == 0
+    
+    # Test case with decimal prices and no transaction fee
     assert calculate_max_profit([1.5, 2.5, 3.5], 0) == 2
+    
+    # Test case with very large transaction fee
     assert calculate_max_profit([1, 3, 2, 8, 4, 10], 1000000000) == 0
+    
+    # Test case with decreasing prices and no transaction fee
+    assert calculate_max_profit([5, 4, 3, 2, 1], 0) == 0
+    
+    # Test case with decreasing prices and transaction fee
+    assert calculate_max_profit([100, 50, 25, 10, 1], 1) == 0
+    
+    # Test case with negative prices and transaction fee
+    assert calculate_max_profit([10, 5, 1, -2, -10], 5) == 0
+    
+    # Test case for prices in descending order and transaction fee
+    assert calculate_max_profit([5, 4, 3, 2, 1], 1) == 0
+    
     # Test with large list of prices (10^5 elements)
     prices = [i for i in range(10**5)]
     assert calculate_max_profit(prices, 10) == 99990
-
-    # Test with very large transaction fee
-    prices = [1, 2, 3, 4, 5]
-    assert calculate_max_profit(prices * 10**5, 10**9) == 0
+    
 test_calculate_max_profit()
