@@ -64,9 +64,14 @@ def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
 
     if len(prices_list) < 2:
         return 0
-
-    # Initialize the buy and sell profits to the first price
+    
+    # Initialise the buy profit as the negative value of the first price.
+    # This represents the maximum profit that can be made by buying the stock
+    # at the first price, since the stock cannot be bought before the first price.
     buy_profit = -prices_list[0]
+    
+    # Initialise the sell profit as 0, since there is no profit in selling the stock
+    # before it is bought.
     sell_profit = 0
 
     # Loop through the remaining prices and update the buy and sell profits
@@ -84,6 +89,7 @@ def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
         buy_profit = max_buy_profit
         sell_profit = max_sell_profit
 
+    # Return the maximum sell profit.    
     return sell_profit
 
 def test_calculate_max_profit():
