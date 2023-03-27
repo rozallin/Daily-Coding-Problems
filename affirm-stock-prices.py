@@ -76,7 +76,6 @@ def test_calculate_max_profit():
     the function is correctly calculating the maximum profit that can be made from buying
     and selling a stock given a list of prices and a transaction fee.
     """
-   def test_calculate_max_profit():
     assert calculate_max_profit([1, 2, 3, 4, 5], 0) == 4
     assert calculate_max_profit([1, 3, 2, 8, 4, 10], 2) == 9
     assert calculate_max_profit([3, 2, 6, 5, 0, 3], 1) == 2
