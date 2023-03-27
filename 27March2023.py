@@ -16,57 +16,62 @@ Time complexity of solution: O(n)
 Space complexity of solution: O(1)
 """
 
-from typing import List
+from typing import Sequence
 
 
-def validate_input(prices: List[numbers.NonNegativeIntegral], transaction_fee: numbers.Integral) -> None:
+def validate_input(prices: Sequence[int], transaction_fee: int) -> None:
     """
     Validates the input for the get_max_profit function, raising an error if the input is invalid.
 
     Args:
-        prices: A list of non-negative integers representing the stock prices in chronological order.
+        prices: A sequence of non-negative integers representing the stock prices in chronological order.
         transaction_fee: An integer representing the transaction fee for each buy and sell transaction.
 
     Raises:
-        TypeError: If prices is not a list of non-negative integers or if transaction_fee is not an integer.
-        ValueError: If transaction_fee is negative or if prices is an empty list.
+        TypeError: If prices is not a sequence of non-negative integers or if transaction_fee is not an integer.
+        TypeError: If prices is an empty sequence.
+        ValueError: If transaction_fee is negative.
     """
-    if not isinstance(prices, list) or not all(isinstance(price, numbers.NonNegativeIntegral) for price in prices):
-        raise TypeError("prices must be a list of non-negative integers")
-    if not isinstance(transaction_fee, numbers.Integral):
-        raise TypeError("transaction_fee must be an integer")
-    if transaction_fee < 0:
+    if not isinstance(transaction_fee, int) or transaction_fee < 0:
         raise ValueError("transaction_fee must be a non-negative integer")
-    if not prices:
-        raise ValueError("prices cannot be an empty list")
 
-def get_max_profit(prices: List[int], transaction_fee: int) -> int:
+    if not all(isinstance(price, int) and price >= 0 for price in prices):
+        raise TypeError("prices must be a sequence of non-negative integers")
+    
+    if not prices:
+        raise TypeError("prices cannot be an empty sequence")
+
+
+def get_max_profit(prices: Sequence[int], transaction_fee: int) -> int:
     """
     Calculates the maximum profit that can be made from buying and selling a stock with transaction fees.
 
     Args:
-        prices (List[int]): A list of integers representing the stock prices in chronological order.
-        transaction_fee (int): An integer representing the transaction fee for each buy and sell transaction.
+        prices: A sequence of integers representing the stock prices in chronological order.
+        transaction_fee: An integer representing the transaction fee for each buy and sell transaction.
 
     Returns:
-        int: The maximum profit that can be made from buying and selling the stock.
+        The maximum profit that can be made from buying and selling the stock.
 
     Raises:
-        AssertionError: If prices is not a list of integers or if transaction_fee is negative.
+        AssertionError: If prices is not a sequence of integers or if transaction_fee is negative.
     """
+    # Validate input
     validate_input(prices, transaction_fee)
 
+    # Handle edge case where there are less than 2 prices
     if len(prices) < 2:
         return 0
 
     # Initialize the maximum profit with and without the stock
-    max_profit_with_stock, max_profit_without_stock = -prices[0] - transaction_fee, 0
+    max_profit_with_stock = -prices[0] - transaction_fee
+    max_profit_without_stock = 0
 
     # Loop through the prices starting from the second one
-    for price in prices[1:]:
+    for price, prev_price in zip(prices[1:], prices[:-1]):
         # Update the maximum profit with and without the stock
-        max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - price - transaction_fee)
-        max_profit_without_stock = max(max_profit_without_stock, max_profit_with_stock + price)
+        # The maximum profit with the stock is either the previous maximum profit with the stock or the maximum profit without the stock minus the current price and transaction fee
+        max_profit_with_stock, max_profit_without_stock = max(max_profit_with_stock, max_profit_without_stock - price - transaction_fee), max(max_profit_without_stock, max_profit_with_stock + price - prev_price)
 
     return max_profit_without_stock
 
