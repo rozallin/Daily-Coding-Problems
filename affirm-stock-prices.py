@@ -18,35 +18,40 @@ Space complexity of solution: O(1)
 
 from typing import Sequence
 
-def validate_input(prices: Sequence[int], fee_per_transaction: int) -> None:
+def validate_input(prices: Sequence[int], transaction_fee: int) -> None:
     """
     Validates the input for the get_max_profit function, raising an error if the input is invalid.
 
     Args:
         prices: A sequence of non-negative integers representing the stock prices in chronological order.
-        fee_per_transaction: An integer representing the fee for each buy and sell transaction.
+        transaction_fee: An integer representing the transaction fee for each buy and sell transaction.
 
     Raises:
-        ValueError: If prices is an empty sequence or fee_per_transaction is negative.
-        TypeError: If prices contains non-integer values or fee_per_transaction is not an integer.
+        ValueError: If prices is an empty sequence or transaction_fee is negative.
+        TypeError: If prices contains non-integer values or transaction_fee is not an integer.
     """
     # Check that prices is not empty
     if not prices:
-        raise ValueError("The prices sequence cannot be empty.")
+        raise ValueError("prices cannot be empty")
 
-    # Check that fee_per_transaction is non-negative
-    if fee_per_transaction < 0:
-        raise ValueError("The fee per transaction must be non-negative.")
+    # Check that transaction_fee is non-negative
+    if transaction_fee < 0:
+        raise ValueError("transaction_fee must be non-negative")
 
     # Check that prices contains only non-negative integers
     for price in prices:
         if not isinstance(price, int) or price < 0:
-            raise TypeError("The prices sequence must contain only non-negative integers.")
+            raise TypeError("prices must contain only non-negative integers")
 
 
 def get_max_profit(prices: Sequence[int], transaction_fee: int) -> int:
     """
     Calculates the maximum profit that can be made from buying and selling a stock with transaction fees.
+
+    The function takes in a sequence of integers representing the stock prices in chronological order,
+    as well as an integer representing the transaction fee for each buy and sell transaction. It then
+    calculates the maximum profit that can be made from buying and selling the stock with the given transaction
+    fees, taking into account that multiple transactions can be made.
 
     Args:
         prices: A sequence of integers representing the stock prices in chronological order.
@@ -67,17 +72,20 @@ def get_max_profit(prices: Sequence[int], transaction_fee: int) -> int:
         return 0
 
     # Initialize the maximum profit with and without the stock
-    max_profit_with_stock = -prices[0] - transaction_fee
+    # The maximum profit with the stock is initialized to negative infinity, since it is not possible to have any profit without buying a stock first
+    max_profit_with_stock = float('-inf')
+    # The maximum profit without the stock is initialized to zero, since we don't have any stock to sell yet
     max_profit_without_stock = 0
 
-    # Loop through the prices using enumerate()
-    for i, price in enumerate(prices[1:], start=1):
+    # Loop through the prices starting from the second one
+    for price, prev_price in zip(prices[1:], prices[:-1]):
         # Update the maximum profit with and without the stock
         # The maximum profit with the stock is either the previous maximum profit with the stock or the maximum profit without the stock minus the current price and transaction fee
         max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - price - transaction_fee)
         # The maximum profit without the stock is either the previous maximum profit without the stock or the maximum profit with the stock plus the difference in price since the previous day
-        max_profit_without_stock = max(max_profit_without_stock, max_profit_with_stock + price - prices[i-1])
+        max_profit_without_stock = max(max_profit_without_stock, max_profit_with_stock + price - prev_price)
 
+    # Return the maximum profit without the stock, since that is the maximum profit we can achieve after all transactions are made
     return max_profit_without_stock
        
 
