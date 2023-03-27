@@ -18,6 +18,7 @@ Space complexity of solution: O(1)
 
 from typing import Sequence
 
+
 def validate_input(prices: Sequence[int], transaction_fee: int) -> None:
     """
     Validates the input for the get_max_profit function, raising an error if the input is invalid.
@@ -64,29 +65,31 @@ def get_max_profit(prices: Sequence[int], transaction_fee: int) -> int:
         ValueError: If prices is an empty sequence or transaction_fee is negative.
         TypeError: If prices contains non-integer values or transaction_fee is not an integer.
     """
-    # Validate input
-    validate_input(prices, transaction_fee)
+    try:
+        # Validate input
+        validate_input(prices, transaction_fee)
 
-    # Handle edge case where there are less than 2 prices
-    if len(prices) < 2:
-        return 0
+        # Handle edge case where there are less than 2 prices
+        if len(prices) < 2:
+            return 0
 
-    # Initialize the maximum profit with and without the stock
-    # The maximum profit with the stock is initialized to negative infinity, since it is not possible to have any profit without buying a stock first
-    max_profit_with_stock = float('-inf')
-    # The maximum profit without the stock is initialized to zero, since we don't have any stock to sell yet
-    max_profit_without_stock = 0
+        # Initialize the maximum profit with and without the stock
+        # The maximum profit with the stock is initialized to negative infinity, since it is not possible to have any profit without buying a stock first
+        max_profit_with_stock = float('-inf')
+        # The maximum profit without the stock is initialized to zero, since we don't have any stock to sell yet
+        max_profit_without_stock = 0
 
-    # Loop through the prices starting from the second one
-    for price, prev_price in zip(prices[1:], prices[:-1]):
-        # Update the maximum profit with and without the stock
-        # The maximum profit with the stock is either the previous maximum profit with the stock or the maximum profit without the stock minus the current price and transaction fee
-        max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - price - transaction_fee)
-        # The maximum profit without the stock is either the previous maximum profit without the stock or the maximum profit with the stock plus the difference in price since the previous day
-        max_profit_without_stock = max(max_profit_without_stock, max_profit_with_stock + price - prev_price)
+        # Loop through the prices starting from the second one
+        for price, prev_price in zip(prices[1:], prices[:-1]):
+            # Update the maximum profit with and without the stock
+            # The maximum profit with the stock is either the previous maximum profit with the stock or the maximum profit without the stock minus the current price and transaction fee
+            max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - price - transaction_fee)
+            # The maximum profit without the stock is either the previous maximum profit without the stock or the maximum profit with the stock plus the difference in price since the previous day
+            max_profit_without_stock = max(max_profit_without_stock, max_profit_with_stock + price - prev_price)
 
-    # Return the maximum profit without the stock, since that is the maximum profit we can achieve after all transactions are made
-    return max_profit_without_stock
-       
-
+        # Return the maximum profit without the stock, since that is the maximum profit we can achieve after all transactions are made
+        return max_profit_without_stock
+    except ValueError as e:
+        print(f"Error: {e}")
+    except TypeError as e
 
