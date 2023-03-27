@@ -18,7 +18,8 @@ Space complexity of solution: O(1)
 
 from typing import List
 
-def validate_input(prices: List[int], fee: int):
+
+def validate_input(prices: List[int], fee: int) -> None:
     """
     Validates the input for the get_max_profit function, raising an error if the input is invalid.
     Args:
@@ -50,13 +51,13 @@ def get_max_profit(prices: List[int], fee: int) -> int:
     if len(prices) < 2:
         return 0
 
-    # Initialize buy_price to the negative of the first price minus the fee, and sell_price to 0.
-    buy_price, sell_price = -prices[0] - fee, 0
+    # Initialize max_profit_with_stock to the negative of the first price minus the fee, and max_profit_without_stock to 0.
+    max_profit_with_stock, max_profit_without_stock = -prices[0] - fee, 0
 
     # Loop through the prices starting from the second one
     for price in prices[1:]:
-        # Update buy_price and sell_price
-        buy_price = max(buy_price, sell_price - price - fee)
-        sell_price = max(sell_price, buy_price + price)
+        # Update max_profit_with_stock and max_profit_without_stock
+        max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - price - fee)
+        max_profit_without_stock = max(max_profit_without_stock, max_profit_with_stock + price)
 
-    return sell_price
+    return max_profit_without_stock
