@@ -14,45 +14,53 @@ Time complexity of solution: O(N)
 Space complexity of solution: O(1)
 """
 
-from typing import Sequence
-
-
-def get_max_profit(prices: Sequence[int], transaction_fee: int) -> int:
+def validate_inputs(prices_list, transaction_fee):
     """
-    Calculates the maximum profit that can be made from buying and selling a stock with transaction fees.
-    The function takes in a sequence of integers representing the stock prices in chronological order,
-    as well as an integer representing the transaction fee for each buy and sell transaction. It then
-    calculates the maximum profit that can be made from buying and selling the stock with the given transaction
-    fees, taking into account that multiple transactions can be made.
-    Args:
-        prices: A sequence of integers representing the stock prices in chronological order.
-        transaction_fee: An integer representing the transaction fee for each buy and sell transaction.
-    Returns:
-        The maximum profit that can be made from buying and selling the stock.
-    Raises:
-        ValueError: If prices is an empty sequence or transaction_fee is negative.
-        TypeError: If prices contains non-integer values or transaction_fee is not an integer.
+    Validate inputs to ensure they meet requirements.
+    :param prices_list: (list) list of prices
+    :param transaction_fee: (int) fee amount
+    :raises TypeError: if prices_list is not a list or transaction_fee is not an integer
+    :raises ValueError: if prices_list contains a non-integer element
     """
-    # Validate input
-    assert prices, "prices cannot be empty"
-    assert all(isinstance(price, int) and price >= 0 for price in prices), "prices must contain only non-negative integers"
-    assert isinstance(transaction_fee, int) and transaction_fee >= 0, "transaction_fee must be a non-negative integer"
+    if not isinstance(prices_list, list):
+        raise TypeError(f"Invalid type for argument 'prices_list': expected list, but got {type(prices_list).__name__}")
 
-    # Handle edge case where there are less than 2 prices
-    if len(prices) < 2:
+    for i, price in enumerate(prices_list):
+        if not isinstance(price, int):
+            raise ValueError(f"Invalid type for element {i} of argument 'prices_list': expected int, but got {type(price).__name__}")
+
+    if not isinstance(transaction_fee, int):
+        raise TypeError(f"Invalid type for argument 'transaction_fee': expected int, but got {type(transaction_fee).__name__}")
+
+def calculate_max_profit(prices_list, transaction_fee):
+    """
+    Calculate the maximum profit that can be made from buying and selling a stock.
+    :param prices_list: (list) list of prices
+    :param transaction_fee: (int) fee amount
+    :return: (int) maximum profit that can be made
+    :raises TypeError: if prices_list is not a list or transaction_fee is not an integer
+    :raises ValueError: if prices_list contains a non-integer element
+    """
+    validate_inputs(prices_list, transaction_fee)
+    number_of_prices = len(prices_list)
+
+    if number_of_prices < 2:
         return 0
 
-    # Initialize the maximum profit with and without the stock
-    max_profit_with_stock = float('-inf') # The maximum profit we can have if we own the stock
-    max_profit_without_stock = 0 # The maximum profit we can have if we don't own the stock
+    max_profit_when_buying, max_profit_when_selling = -prices_list[0], 0
 
-    # Loop through the prices starting from the second one
-    for i in range(1, len(prices)):
-        # Update the maximum profit with and without the stock
-        # The maximum profit with the stock is either the previous maximum profit with the stock or the maximum profit without the stock minus the current price and transaction fee
-        max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - prices[i] - transaction_fee)
-        # The maximum profit without the stock is either the previous maximum profit without the stock or the maximum profit with the stock plus the difference in price since the previous day
-        max_profit_without_stock = max(max_profit_without_stock, max_profit_with_stock + prices[i] - prices[i-1])
+    for i in range(1, number_of_prices):
+        # Calculate the maximum profit that can be made from buying at this price
+        # and subtracting the transaction_fee.
+        potential_buy_profit = max_profit_when_selling - prices_list[i] - transaction_fee
 
-    # Return the maximum profit without the stock, since that is the maximum profit we can achieve after all transactions are made
-    return max_profit_without_stock
+        # Calculate the maximum profit that can be made from selling at this price.
+        potential_sell_profit = max_profit_when_buying + prices_list[i]
+
+        # Update the maximum buy profit if the potential buy profit is greater.
+        max_profit_when_buying = max(max_profit_when_buying, potential_buy_profit)
+
+        # Update the maximum sell profit if the potential sell profit is greater.
+        max_profit_when_selling = max(max_profit_when_selling, potential_sell_profit)
+
+    return max_profit_when_selling
