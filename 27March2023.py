@@ -24,14 +24,14 @@ def get_max_profit(prices: List[int], fee: int) -> int:
         return 0
 
     # initialize the variables
-    hold = -prices[0] - fee
-    not_hold = 0
+    hold = -prices[0] - fee  # the maximum profit if the stock is bought on the first day
+    not_hold = 0  # the maximum profit if the stock is not held on the first day
 
     # iterate over the prices
     for i in range(1, n):
-        temp = hold
-        hold = max(hold, not_hold - prices[i] - fee)
-        not_hold = max(not_hold, temp + prices[i])
+        temp = hold  # temporarily hold the maximum profit if the stock is bought on the previous day
+        hold = max(hold, not_hold - prices[i] - fee)  # the maximum profit if the stock is bought today
+        not_hold = max(not_hold, temp + prices[i])  # the maximum profit if the stock is not held today
 
     return not_hold
 
