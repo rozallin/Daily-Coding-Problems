@@ -18,16 +18,17 @@ Space complexity of solution: O(1)
 
 from typing import List
 
-
 def validate_input(prices: List[int], fee: int) -> None:
     """
     Validates the input for the get_max_profit function, raising an error if the input is invalid.
+    
     Args:
         prices (List[int]): A list of integers representing the stock prices in chronological order.
         fee (int): An integer representing the transaction fee for each buy and sell transaction.
+        
     Raises:
-        TypeError: if prices is not a list of integers.
-        ValueError: if fee is negative.
+        TypeError: If prices is not a list of integers.
+        ValueError: If fee is negative.
     """
     if not isinstance(prices, list) or not all(isinstance(price, int) for price in prices):
         raise TypeError("prices must be a list of integers")
@@ -35,29 +36,34 @@ def validate_input(prices: List[int], fee: int) -> None:
         raise ValueError("fee must be a non-negative integer")
 
 
-def get_max_profit(prices: List[int], fee: int) -> int:
+def get_max_profit(prices: List[int], transaction_fee: int) -> int:
     """
     Calculates the maximum profit that can be made from buying and selling a stock with transaction fees.
     
     Args:
         prices (List[int]): A list of integers representing the stock prices in chronological order.
-        fee (int): An integer representing the transaction fee for each buy and sell transaction.
+        transaction_fee (int): An integer representing the transaction fee for each buy and sell transaction.
         
     Returns:
         int: The maximum profit that can be made from buying and selling the stock.
+        
+    Raises:
+        TypeError: If prices is not a list of integers.
+        ValueError: If fee is negative.
     """
-    validate_input(prices, fee)
+    validate_input(prices, transaction_fee)
 
     if len(prices) < 2:
         return 0
 
-    # Initialize max_profit_with_stock to the negative of the first price minus the fee, and max_profit_without_stock to 0.
-    max_profit_with_stock, max_profit_without_stock = -prices[0] - fee, 0
+    # Initialize the maximum profit with and without the stock
+    max_profit_with_stock, max_profit_without_stock = -prices[0] - transaction_fee, 0
 
     # Loop through the prices starting from the second one
     for price in prices[1:]:
-        # Update max_profit_with_stock and max_profit_without_stock
-        max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - price - fee)
+        # Update the maximum profit with and without the stock
+        max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - price - transaction_fee)
         max_profit_without_stock = max(max_profit_without_stock, max_profit_with_stock + price)
 
     return max_profit_without_stock
+
