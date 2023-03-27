@@ -52,7 +52,7 @@ def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
     Note:
         - If there are no profitable trades that can be made, returns 0.
         - If transaction_fee is 0 or negative, it is effectively ignored.
-        - If the input list can have repeated prices, the function considers each occurrence of a price
+        - If the input list has repeated prices, the function considers each occurrence of a price
           as a different stock on a different day. For example, if prices_list=[1, 2, 1], the function considers
           buying on day 1 and selling on day 2, and also buying on day 3 and selling on day 2.
     Example:
