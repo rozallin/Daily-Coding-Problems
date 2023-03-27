@@ -44,38 +44,41 @@ def validate_input(prices: Sequence[int], fee_per_transaction: int) -> None:
             raise TypeError("The prices sequence must contain only non-negative integers.")
 
 
-def get_max_profit(prices: Sequence[int], fee_per_transaction: int) -> int:
+def get_max_profit(prices: Sequence[int], transaction_fee: int) -> int:
     """
     Calculates the maximum profit that can be made from buying and selling a stock with transaction fees.
 
     Args:
         prices: A sequence of integers representing the stock prices in chronological order.
-        fee_per_transaction: An integer representing the fee for each buy and sell transaction.
+        transaction_fee: An integer representing the transaction fee for each buy and sell transaction.
 
     Returns:
         The maximum profit that can be made from buying and selling the stock.
 
     Raises:
-        ValueError: If prices is an empty sequence or fee_per_transaction is negative.
-        TypeError: If prices contains non-integer values or fee_per_transaction is not an integer.
+        ValueError: If prices is an empty sequence or transaction_fee is negative.
+        TypeError: If prices contains non-integer values or transaction_fee is not an integer.
     """
     # Validate input
-    validate_input(prices, fee_per_transaction)
+    validate_input(prices, transaction_fee)
 
     # Handle edge case where there are less than 2 prices
     if len(prices) < 2:
         return 0
 
     # Initialize the maximum profit with and without the stock
-    max_profit_with_stock = -prices[0] - fee_per_transaction
+    max_profit_with_stock = -prices[0] - transaction_fee
     max_profit_without_stock = 0
 
-    # Loop through the prices starting from the second one
-    for price, prev_price in zip(prices[1:], prices[:-1]):
+    # Loop through the prices using enumerate()
+    for i, price in enumerate(prices[1:], start=1):
         # Update the maximum profit with and without the stock
-        # The maximum profit with the stock is either the previous maximum profit with the stock
-        # or the maximum profit without the stock minus the current price and fee per transaction
-        max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - price - fee_per_transaction)
+        # The maximum profit with the stock is either the previous maximum profit with the stock or the maximum profit without the stock minus the current price and transaction fee
+        max_profit_with_stock = max(max_profit_with_stock, max_profit_without_stock - price - transaction_fee)
+        # The maximum profit without the stock is either the previous maximum profit without the stock or the maximum profit with the stock plus the difference in price since the previous day
+        max_profit_without_stock = max(max_profit_without_stock, max_profit_with_stock + price - prices[i-1])
+
+    return max_profit_without_stock
        
 
 
