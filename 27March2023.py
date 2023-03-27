@@ -50,20 +50,12 @@ def get_max_profit(prices: List[int], fee: int) -> int:
     if len(prices) < 2:
         return 0
 
-    # Initialize buy_price and sell_price
+    # Initialize buy_price to the negative of the first price minus the fee, and sell_price to 0.
     buy_price, sell_price = -prices[0] - fee, 0
 
     # Loop through the prices starting from the second one
     for price in prices[1:]:
         # Update buy_price and sell_price
-        buy_price = max(buy_price, sell_price - price - fee)
-        sell_price = max(sell_price, buy_price + price)
-
-    return sell_price
-
-    buy_price, sell_price = -prices[0] - fee, 0
-
-    for i, price in enumerate(prices[1:], start=1):
         buy_price = max(buy_price, sell_price - price - fee)
         sell_price = max(sell_price, buy_price + price)
 
