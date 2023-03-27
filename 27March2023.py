@@ -19,6 +19,17 @@ Space complexity of solution: O(1)
 from typing import List
 
 def get_max_profit(prices: List[int], fee: int) -> int:
+"""
+Given a list of prices and a transaction fee, returns the maximum profit that can be made by buying and selling
+the stock with the given prices. Assumes that prices is a list of integers and fee is a positive integer.
+
+Args:
+    prices (List[int]): A list of integers representing the prices of the stock on each day.
+    fee (int): An integer representing the transaction fee.
+
+Returns:
+    int: The maximum profit that can be made by buying and selling the stock with the given prices.
+"""
     # Check that input is valid
     if not all(isinstance(price, int) for price in prices):
         raise ValueError("Prices list must contain only integers")
