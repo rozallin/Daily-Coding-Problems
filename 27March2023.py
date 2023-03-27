@@ -21,20 +21,15 @@ from typing import List
 def validate_input(prices: List[int], fee: int):
     """
     Validates the input for the get_max_profit function, raising an error if the input is invalid.
-
     Args:
         prices (List[int]): A list of integers representing the stock prices in chronological order.
         fee (int): An integer representing the transaction fee for each buy and sell transaction.
-
     Raises:
         TypeError: if prices is not a list of integers.
         ValueError: if fee is negative.
     """
-    # Check that all elements of the prices list are integers
-    if not all(isinstance(price, int) for price in prices):
+    if not isinstance(prices, list) or not all(isinstance(price, int) for price in prices):
         raise TypeError("prices must be a list of integers")
-    
-    # Check that the fee is non-negative
     if fee < 0:
         raise ValueError("fee must be a non-negative integer")
 
@@ -55,12 +50,12 @@ def get_max_profit(prices: List[int], fee: int) -> int:
     if len(prices) < 2:
         return 0
 
-    buy_price = -prices[0] - fee
-    sell_price = 0
+    buy_price, sell_price = -prices[0] - fee, 0
 
-    for i in range(1, len(prices)):
-        temp: int = buy_price
-        buy_price = max(buy_price, sell_price - prices[i] - fee)
-        sell_price = max(sell_price, temp + prices[i])
+    for i, price in enumerate(prices[1:], start=1):
+        if (new_buy_price := sell_price - price - fee) > buy_price:
+            buy_price = new_buy_price
+        if (new_sell_price := buy_price + price) > sell_price:
+            sell_price = new_sell_price
 
     return sell_price
