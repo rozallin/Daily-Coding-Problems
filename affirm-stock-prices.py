@@ -14,53 +14,77 @@ Time complexity of solution: O(N)
 Space complexity of solution: O(1)
 """
 
-def validate_inputs(prices_list, transaction_fee):
+from typing import List
+
+
+def check_input_validity(prices_list: List[int], transaction_fee: int) -> None:
     """
-    Validate inputs to ensure they meet requirements.
-    :param prices_list: (list) list of prices
-    :param transaction_fee: (int) fee amount
+    Check if inputs meet requirements.
+    :param prices_list: list of prices
+    :param transaction_fee: fee amount
     :raises TypeError: if prices_list is not a list or transaction_fee is not an integer
     :raises ValueError: if prices_list contains a non-integer element
     """
-    if not isinstance(prices_list, list):
-        raise TypeError(f"Invalid type for argument 'prices_list': expected list, but got {type(prices_list).__name__}")
-
-    for i, price in enumerate(prices_list):
-        if not isinstance(price, int):
-            raise ValueError(f"Invalid type for element {i} of argument 'prices_list': expected int, but got {type(price).__name__}")
+    if not isinstance(prices_list, list) or not all(isinstance(price, int) for price in prices_list):
+        raise ValueError(f"Invalid value for argument 'prices_list': expected a list of integers.")
 
     if not isinstance(transaction_fee, int):
-        raise TypeError(f"Invalid type for argument 'transaction_fee': expected int, but got {type(transaction_fee).__name__}")
+        raise TypeError(f"Invalid type for argument 'transaction_fee': expected an integer.")
 
-def calculate_max_profit(prices_list, transaction_fee):
-    """
-    Calculate the maximum profit that can be made from buying and selling a stock.
-    :param prices_list: (list) list of prices
-    :param transaction_fee: (int) fee amount
-    :return: (int) maximum profit that can be made
-    :raises TypeError: if prices_list is not a list or transaction_fee is not an integer
-    :raises ValueError: if prices_list contains a non-integer element
-    """
-    validate_inputs(prices_list, transaction_fee)
-    number_of_prices = len(prices_list)
 
-    if number_of_prices < 2:
+def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
+    """
+    Calculate the maximum profit that can be made from buying and selling a stock,
+    given a list of prices and a transaction fee.
+
+    :param prices_list: a list of prices for the stock
+    :param transaction_fee: the fee charged for each transaction
+    :return: the maximum profit that can be made from buying and selling the stock
+    """
+    check_input_validity(prices_list, transaction_fee)
+
+    num_prices = len(prices_list)
+
+    if num_prices < 2:
         return 0
 
-    max_profit_when_buying, max_profit_when_selling = -prices_list[0], 0
+    # Initialize the buy and sell profits to the first price
+    buy_profit = -prices_list[0]
+    sell_profit = 0
 
-    for i in range(1, number_of_prices):
-        # Calculate the maximum profit that can be made from buying at this price
+    # Loop through the remaining prices and update the buy and sell profits
+    for current_price_index in range(1, num_prices):
+        current_price = prices_list[current_price_index]
+        
+        # Calculate the maximum profit that can be made by buying at the current price
         # and subtracting the transaction_fee.
-        potential_buy_profit = max_profit_when_selling - prices_list[i] - transaction_fee
+        max_buy_profit = max(buy_profit, sell_profit - current_price - transaction_fee)
+        
+        # Calculate the maximum profit that can be made by selling at the current price.
+        # The buy_profit variable is used here to ensure that we only sell if we've
+        # already bought the stock.
+        max_sell_profit = max(sell_profit, buy_profit + current_price)
+        
+        # Update the buy and sell profits for the next iteration
+        buy_profit = max_buy_profit
+        sell_profit = max_sell_profit
 
-        # Calculate the maximum profit that can be made from selling at this price.
-        potential_sell_profit = max_profit_when_buying + prices_list[i]
+    return sell_profit
 
-        # Update the maximum buy profit if the potential buy profit is greater.
-        max_profit_when_buying = max(max_profit_when_buying, potential_buy_profit)
 
-        # Update the maximum sell profit if the potential sell profit is greater.
-        max_profit_when_selling = max(max_profit_when_selling, potential_sell_profit)
-
-    return max_profit_when_selling
+def test_calculate_max_profit():
+    """
+    Test function for calculate_max_profit. It includes several test cases to ensure that
+    the function is correctly calculating the maximum profit that can be made from buying
+    and selling a stock given a list of prices and a transaction fee.
+    """
+   def test_calculate_max_profit():
+    assert calculate_max_profit([1, 2, 3, 4, 5], 0) == 4
+    assert calculate_max_profit([1, 3, 2, 8, 4, 10], 2) == 9
+    assert calculate_max_profit([3, 2, 6, 5, 0, 3], 1) == 2
+    assert calculate_max_profit([1, 2, 3, 4, 5], 1) == 3
+    assert calculate_max_profit([5, 4, 3, 2, 1], 0) == 0
+    assert calculate_max_profit([], 2) == 0
+    assert calculate_max_profit([1], 1) == 0
+    assert calculate_max_profit([1, 2, 3] * 1000, 0) == 2997
+test_calculate_max_profit()
