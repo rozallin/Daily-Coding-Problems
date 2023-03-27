@@ -18,6 +18,12 @@ Space complexity of solution: O(1)
 
 from typing import List
 
+def validate_input(prices: List[int], fee: int):
+    if not all(isinstance(price, int) for price in prices):
+        raise TypeError("prices must be a list of integers")
+    if fee < 0:
+        raise ValueError("fee must be a non-negative integer")
+
 def get_max_profit(prices: List[int], fee: int) -> int:
     """
     Calculates the maximum profit that can be made from buying and selling a stock with transaction fees.
@@ -29,27 +35,17 @@ def get_max_profit(prices: List[int], fee: int) -> int:
     Returns:
         int: The maximum profit that can be made from buying and selling the stock.
     """
-    # Validate input
-    if not all(isinstance(price, int) for price in prices):
-        raise TypeError("prices must be a list of integers")
-    if fee < 0:
-        raise ValueError("fee must be a non-negative integer")
+    validate_input(prices, fee)
 
-    # If there are less than 2 prices, no transaction can be made, so return 0
     if len(prices) < 2:
         return 0
 
-    # Initialize variables
-    buy_price = -prices[0] - fee  # The maximum profit if the stock is bought on the first day
-    sell_price = 0  # The maximum profit if the stock is not held on the first day
+    buy_price = -prices[0] - fee
+    sell_price = 0
 
-    # Iterate over the prices
     for i in range(1, len(prices)):
-        # Temporarily hold the maximum profit if the stock is bought on the previous day
-        temp = buy_price
-        # Update the maximum profit if the stock is bought today
+        temp: int = buy_price
         buy_price = max(buy_price, sell_price - prices[i] - fee)
-        # Update the maximum profit if the stock is not held today
         sell_price = max(sell_price, temp + prices[i])
 
     return sell_price
