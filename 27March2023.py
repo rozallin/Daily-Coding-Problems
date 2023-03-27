@@ -18,38 +18,36 @@ Space complexity of solution: O(1)
 
 from typing import List
 
-def validate_input(prices: List[int], fee: int) -> None:
+
+def validate_input(prices: List[int], transaction_fee: int) -> None:
     """
     Validates the input for the get_max_profit function, raising an error if the input is invalid.
-    
+
     Args:
         prices (List[int]): A list of integers representing the stock prices in chronological order.
-        fee (int): An integer representing the transaction fee for each buy and sell transaction.
-        
+        transaction_fee (int): An integer representing the transaction fee for each buy and sell transaction.
+
     Raises:
-        TypeError: If prices is not a list of integers.
-        ValueError: If fee is negative.
+        AssertionError: If prices is not a list of integers or if transaction_fee is negative.
     """
-    if not isinstance(prices, list) or not all(isinstance(price, int) for price in prices):
-        raise TypeError("prices must be a list of integers")
-    if fee < 0:
-        raise ValueError("fee must be a non-negative integer")
+    assert isinstance(prices, list), "prices must be a list of integers"
+    assert all(isinstance(price, int) for price in prices), "prices must be a list of integers"
+    assert transaction_fee >= 0, "transaction_fee must be a non-negative integer"
 
 
 def get_max_profit(prices: List[int], transaction_fee: int) -> int:
     """
     Calculates the maximum profit that can be made from buying and selling a stock with transaction fees.
-    
+
     Args:
         prices (List[int]): A list of integers representing the stock prices in chronological order.
         transaction_fee (int): An integer representing the transaction fee for each buy and sell transaction.
-        
+
     Returns:
         int: The maximum profit that can be made from buying and selling the stock.
-        
+
     Raises:
-        TypeError: If prices is not a list of integers.
-        ValueError: If fee is negative.
+        AssertionError: If prices is not a list of integers or if transaction_fee is negative.
     """
     validate_input(prices, transaction_fee)
 
