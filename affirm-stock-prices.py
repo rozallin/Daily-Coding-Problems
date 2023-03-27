@@ -91,5 +91,5 @@ def get_max_profit(prices: Sequence[int], transaction_fee: int) -> int:
         return max_profit_without_stock
     except ValueError as e:
         print(f"Error: {e}")
-    except TypeError as e
+    except TypeError as e:
 
