@@ -19,21 +19,26 @@ Space complexity of solution: O(1)
 from typing import List
 
 
-def validate_input(prices: List[int], transaction_fee: int) -> None:
+def validate_input(prices: List[numbers.NonNegativeIntegral], transaction_fee: numbers.Integral) -> None:
     """
     Validates the input for the get_max_profit function, raising an error if the input is invalid.
 
     Args:
-        prices (List[int]): A list of integers representing the stock prices in chronological order.
-        transaction_fee (int): An integer representing the transaction fee for each buy and sell transaction.
+        prices: A list of non-negative integers representing the stock prices in chronological order.
+        transaction_fee: An integer representing the transaction fee for each buy and sell transaction.
 
     Raises:
-        AssertionError: If prices is not a list of integers or if transaction_fee is negative.
+        TypeError: If prices is not a list of non-negative integers or if transaction_fee is not an integer.
+        ValueError: If transaction_fee is negative or if prices is an empty list.
     """
-    assert isinstance(prices, list), "prices must be a list of integers"
-    assert all(isinstance(price, int) for price in prices), "prices must be a list of integers"
-    assert transaction_fee >= 0, "transaction_fee must be a non-negative integer"
-
+    if not isinstance(prices, list) or not all(isinstance(price, numbers.NonNegativeIntegral) for price in prices):
+        raise TypeError("prices must be a list of non-negative integers")
+    if not isinstance(transaction_fee, numbers.Integral):
+        raise TypeError("transaction_fee must be an integer")
+    if transaction_fee < 0:
+        raise ValueError("transaction_fee must be a non-negative integer")
+    if not prices:
+        raise ValueError("prices cannot be an empty list")
 
 def get_max_profit(prices: List[int], transaction_fee: int) -> int:
     """
