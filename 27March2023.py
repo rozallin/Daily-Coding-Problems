@@ -19,23 +19,27 @@ Space complexity of solution: O(1)
 from typing import List
 
 def get_max_profit(prices: List[int], fee: int) -> int:
+    # Check that input is valid
+    if not all(isinstance(price, int) for price in prices):
+        raise ValueError("Prices list must contain only integers")
+    if fee <= 0:
+        raise ValueError("Fee must be a positive integer")
+
     n = len(prices)
     if n < 2:
         return 0
 
-    # initialize the variables
-    hold = -prices[0] - fee  # the maximum profit if the stock is bought on the first day
-    not_hold = 0  # the maximum profit if the stock is not held on the first day
+    # Initialize variables
+    max_profit_buy = -prices[0] - fee  # The maximum profit if the stock is bought on the first day
+    max_profit_sell = 0  # The maximum profit if the stock is not held on the first day
 
-    # iterate over the prices
+    # Iterate over the prices
     for i in range(1, n):
-        temp = hold  # temporarily hold the maximum profit if the stock is bought on the previous day
-        hold = max(hold, not_hold - prices[i] - fee)  # the maximum profit if the stock is bought today
-        not_hold = max(not_hold, temp + prices[i])  # the maximum profit if the stock is not held today
+        # Temporarily hold the maximum profit if the stock is bought on the previous day
+        temp = max_profit_buy
+        # Update the maximum profit if the stock is bought today
+        max_profit_buy = max(max_profit_buy, max_profit_sell - prices[i] - fee)
+        # Update the maximum profit if the stock is not held today
+        max_profit_sell = max(max_profit_sell, temp + prices[i])
 
-    return not_hold
-
-
-if __name__ == "__main__":
-    print(get_max_profit([1, 3, 2, 8, 4, 10], 2))
-    print(get_max_profit([1, 3, 2, 1, 4, 10], 2))
+    return max_profit_sell
