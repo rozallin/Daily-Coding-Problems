@@ -25,18 +25,12 @@ def check_input_validity(prices_list: List[int], transaction_fee: int) -> None:
     :raises TypeError: if prices_list is not a list or transaction_fee is not an integer
     :raises ValueError: if prices_list contains a non-integer element
     """
-    if not isinstance(prices_list, list):
-        raise TypeError(f"Invalid type for argument 'prices_list': expected a list.")
-
-    if not all(isinstance(price, int) for price in prices_list):
-        raise ValueError(f"Invalid value for argument 'prices_list': expected a list of integers.")
-
-    if not isinstance(transaction_fee, int):
-        raise TypeError(f"Invalid type for argument 'transaction_fee': expected an integer.")
-
+    assert isinstance(prices_list, list), f"Invalid type for argument 'prices_list': expected a list."
+    assert all(isinstance(price, int) for price in prices_list), f"Invalid value for argument 'prices_list': expected a list of integers."
+    assert isinstance(transaction_fee, int), f"Invalid type for argument 'transaction_fee': expected an integer."
 
 def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
-      """
+    """
     Given a list of stock prices and a transaction fee, calculates the maximum profit that can be made
     by buying and selling a single stock, subject to the transaction fee.
 
