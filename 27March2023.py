@@ -12,7 +12,7 @@ could buy the stock at $1, and sell at $8, and then buy it at $4 and sell it at 
 Since we did two transactions, there is a $4 fee, so we have 7 + 6 = 13 profit minus $4
 of fees.
 
-Time complexity of solution: O(n)
+Time complexity of solution: O(N)
 Space complexity of solution: O(1)
 """
 
