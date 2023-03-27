@@ -36,34 +36,28 @@ def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
     """
     Given a list of stock prices and a transaction fee, calculates the maximum profit that can be made
     by buying and selling a single stock, subject to the transaction fee.
-
     Args:
-        prices (List[float]): A list of stock prices, where prices[i] is the price of the stock on day i.
-        transaction_fee (float): The transaction fee incurred for buying or selling a stock.
-
+        prices_list (List[int]): A list of stock prices, where prices_list[i] is the price of the stock on day i.
+        transaction_fee (int): The transaction fee incurred for buying or selling a stock.
     Returns:
         The maximum profit that can be made by buying and selling a single stock, subject to the transaction fee.
-
     Raises:
-        ValueError: If prices is empty or if transaction_fee is negative.
-
+        ValueError: If prices_list is empty or if transaction_fee is negative.
     Note:
         - If there are no profitable trades that can be made, returns 0.
         - If transaction_fee is 0 or negative, it is effectively ignored.
         - If the input list can have repeated prices, the function considers each occurrence of a price
-          as a different stock on a different day. For example, if prices=[1, 2, 1], the function considers
+          as a different stock on a different day. For example, if prices_list=[1, 2, 1], the function considers
           buying on day 1 and selling on day 2, and also buying on day 3 and selling on day 2.
-
     Example:
         >>> calculate_max_profit([1, 3, 2, 8, 4, 10], 2)
-        9.0
+        9
     """
     if not is_input_valid(prices_list, transaction_fee):
-    print("Invalid input")
-    return
+        raise ValueError("Invalid input")
 
     if len(prices_list) < 2:
-        raise ValueError("Prices list should contain at least two elements.")
+        return 0
 
     # Initialize the buy and sell profits to the first price
     buy_profit = -prices_list[0]
@@ -71,16 +65,15 @@ def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
 
     # Loop through the remaining prices and update the buy and sell profits
     for current_price_index, current_price in enumerate(prices_list[1:], start=1):
-        
         # Calculate the maximum profit that can be made by buying at the current price
         # and subtracting the transaction_fee.
         max_buy_profit = max(buy_profit, sell_profit - current_price - transaction_fee)
-        
+
         # Calculate the maximum profit that can be made by selling at the current price.
         # The buy_profit variable is used here to ensure that we only sell if we've
         # already bought the stock.
         max_sell_profit = max(sell_profit, buy_profit + current_price)
-        
+
         # Update the buy and sell profits for the next iteration
         buy_profit = max_buy_profit
         sell_profit = max_sell_profit
