@@ -87,4 +87,10 @@ def test_calculate_max_profit():
     assert calculate_max_profit([], 2) == 0
     assert calculate_max_profit([1], 1) == 0
     assert calculate_max_profit([1, 2, 3] * 1000, 0) == 2997
+    assert calculate_max_profit([1, 10], 1) == 8
+    assert calculate_max_profit([1] * 1000000, 2) == 0
+    assert calculate_max_profit([-1, -2, -3], 0) == 0
+    assert calculate_max_profit([1, 1, 1, 1], 2) == 0
+    assert calculate_max_profit([1.5, 2.5, 3.5], 0) == 2
+    assert calculate_max_profit([1, 3, 2, 8, 4, 10], 1000000000) == 0
 test_calculate_max_profit()
