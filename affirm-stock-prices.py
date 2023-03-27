@@ -17,17 +17,20 @@ Space complexity of solution: O(1)
 from typing import List
 
 
-def check_input_validity(prices_list: List[int], transaction_fee: int) -> None:
+    def is_input_valid(prices_list: List[int], transaction_fee: int) -> bool:
     """
     Check if inputs meet requirements.
     :param prices_list: list of prices
     :param transaction_fee: fee amount
-    :raises TypeError: if prices_list is not a list or transaction_fee is not an integer
-    :raises ValueError: if prices_list contains a non-integer element
+    :returns: True if inputs are valid, False otherwise
     """
-    assert isinstance(prices_list, list), f"Invalid type for argument 'prices_list': expected a list."
-    assert all(isinstance(price, int) for price in prices_list), f"Invalid value for argument 'prices_list': expected a list of integers."
-    assert isinstance(transaction_fee, int), f"Invalid type for argument 'transaction_fee': expected an integer."
+    if not isinstance(prices_list, list):
+        return False
+    if not all(isinstance(price, int) for price in prices_list):
+        return False
+    if not isinstance(transaction_fee, int):
+        return False
+    return True
 
 def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
     """
@@ -55,7 +58,9 @@ def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
         >>> calculate_max_profit([1, 3, 2, 8, 4, 10], 2)
         9.0
     """
-    check_input_validity(prices_list, transaction_fee)
+    if not is_input_valid(prices_list, transaction_fee):
+    print("Invalid input")
+    return
 
     if len(prices_list) < 2:
         raise ValueError("Prices list should contain at least two elements.")
