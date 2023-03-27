@@ -19,10 +19,16 @@ from typing import List
 
     def is_input_valid(prices_list: List[int], transaction_fee: int) -> bool:
     """
-    Check if inputs meet requirements.
-    :param prices_list: list of prices
-    :param transaction_fee: fee amount
-    :returns: True if inputs are valid, False otherwise
+    Check if the input parameters meet the requirements for the function to execute correctly.
+
+    :param prices_list: A list of integers representing the prices of assets to be transacted.
+    :type prices_list: List[int]
+    
+    :param transaction_fee: An integer representing the transaction fee amount.
+    :type transaction_fee: int
+    
+    :returns: A boolean indicating whether the inputs meet the requirements (True) or not (False).
+    :rtype: bool
     """
     if not isinstance(prices_list, list):
         return False
