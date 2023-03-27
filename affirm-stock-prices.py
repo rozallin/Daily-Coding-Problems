@@ -25,7 +25,10 @@ def check_input_validity(prices_list: List[int], transaction_fee: int) -> None:
     :raises TypeError: if prices_list is not a list or transaction_fee is not an integer
     :raises ValueError: if prices_list contains a non-integer element
     """
-    if not isinstance(prices_list, list) or not all(isinstance(price, int) for price in prices_list):
+    if not isinstance(prices_list, list):
+        raise TypeError(f"Invalid type for argument 'prices_list': expected a list.")
+
+    if not all(isinstance(price, int) for price in prices_list):
         raise ValueError(f"Invalid value for argument 'prices_list': expected a list of integers.")
 
     if not isinstance(transaction_fee, int):
@@ -36,25 +39,21 @@ def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
     """
     Calculate the maximum profit that can be made from buying and selling a stock,
     given a list of prices and a transaction fee.
-
     :param prices_list: a list of prices for the stock
     :param transaction_fee: the fee charged for each transaction
     :return: the maximum profit that can be made from buying and selling the stock
     """
     check_input_validity(prices_list, transaction_fee)
 
-    num_prices = len(prices_list)
-
-    if num_prices < 2:
-        return 0
+    if len(prices_list) < 2:
+        raise ValueError("Prices list should contain at least two elements.")
 
     # Initialize the buy and sell profits to the first price
     buy_profit = -prices_list[0]
     sell_profit = 0
 
     # Loop through the remaining prices and update the buy and sell profits
-    for current_price_index in range(1, num_prices):
-        current_price = prices_list[current_price_index]
+    for current_price_index, current_price in enumerate(prices_list[1:], start=1):
         
         # Calculate the maximum profit that can be made by buying at the current price
         # and subtracting the transaction_fee.
@@ -70,7 +69,6 @@ def calculate_max_profit(prices_list: List[int], transaction_fee: int) -> int:
         sell_profit = max_sell_profit
 
     return sell_profit
-
 
 def test_calculate_max_profit():
     """
