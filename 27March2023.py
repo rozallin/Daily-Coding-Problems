@@ -19,38 +19,37 @@ Space complexity of solution: O(1)
 from typing import List
 
 def get_max_profit(prices: List[int], fee: int) -> int:
-"""
-Given a list of prices and a transaction fee, returns the maximum profit that can be made by buying and selling
-the stock with the given prices. Assumes that prices is a list of integers and fee is a positive integer.
-
-Args:
-    prices (List[int]): A list of integers representing the prices of the stock on each day.
-    fee (int): An integer representing the transaction fee.
-
-Returns:
-    int: The maximum profit that can be made by buying and selling the stock with the given prices.
-"""
-    # Check that input is valid
+    """
+    Calculates the maximum profit that can be made from buying and selling a stock with transaction fees.
+    
+    Args:
+        prices (List[int]): A list of integers representing the stock prices in chronological order.
+        fee (int): An integer representing the transaction fee for each buy and sell transaction.
+        
+    Returns:
+        int: The maximum profit that can be made from buying and selling the stock.
+    """
+    # Validate input
     if not all(isinstance(price, int) for price in prices):
-        raise ValueError("Prices list must contain only integers")
-    if fee <= 0:
-        raise ValueError("Fee must be a positive integer")
+        raise TypeError("prices must be a list of integers")
+    if fee < 0:
+        raise ValueError("fee must be a non-negative integer")
 
-    n = len(prices)
-    if n < 2:
+    # If there are less than 2 prices, no transaction can be made, so return 0
+    if len(prices) < 2:
         return 0
 
     # Initialize variables
-    max_profit_buy = -prices[0] - fee  # The maximum profit if the stock is bought on the first day
-    max_profit_sell = 0  # The maximum profit if the stock is not held on the first day
+    buy_price = -prices[0] - fee  # The maximum profit if the stock is bought on the first day
+    sell_price = 0  # The maximum profit if the stock is not held on the first day
 
     # Iterate over the prices
-    for i in range(1, n):
+    for i in range(1, len(prices)):
         # Temporarily hold the maximum profit if the stock is bought on the previous day
-        temp = max_profit_buy
+        temp = buy_price
         # Update the maximum profit if the stock is bought today
-        max_profit_buy = max(max_profit_buy, max_profit_sell - prices[i] - fee)
+        buy_price = max(buy_price, sell_price - prices[i] - fee)
         # Update the maximum profit if the stock is not held today
-        max_profit_sell = max(max_profit_sell, temp + prices[i])
+        sell_price = max(sell_price, temp + prices[i])
 
-    return max_profit_sell
+    return sell_price
