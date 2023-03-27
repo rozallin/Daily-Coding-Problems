@@ -11,33 +11,29 @@ For example, given [1, 3, 2, 8, 4, 10] and fee = 2, you should return 9, since y
 could buy the stock at $1, and sell at $8, and then buy it at $4 and sell it at $10.
 Since we did two transactions, there is a $4 fee, so we have 7 + 6 = 13 profit minus $4
 of fees.
+
+Time complexity of solution: O(n)
+Space complexity of solution: O(1)
 """
 
 from typing import List
 
+def get_max_profit(prices: List[int], fee: int) -> int:
+    n = len(prices)
+    if n < 2:
+        return 0
 
-def get_max_profit(
-    prices: List[int], fee: int, profit: int = 0, current: int = 0, can_buy: bool = True
-) -> int:
-    if not prices:
-        return profit
-    if can_buy:
-        return max(
-            get_max_profit(
-                prices[1:], fee, profit, (-prices[0] - fee), False
-            ),  # buying
-            get_max_profit(
-                prices[1:], fee, profit, 0, True
-            ),  # holding
-        )
-    return max(
-        get_max_profit(
-            prices[1:], fee, (profit + current + prices[0]), 0, True
-        ),  # selling
-        get_max_profit(
-            prices[1:], fee, profit, current, False
-        ),  # holding
-    )
+    # initialize the variables
+    hold = -prices[0] - fee
+    not_hold = 0
+
+    # iterate over the prices
+    for i in range(1, n):
+        temp = hold
+        hold = max(hold, not_hold - prices[i] - fee)
+        not_hold = max(not_hold, temp + prices[i])
+
+    return not_hold
 
 
 if __name__ == "__main__":
